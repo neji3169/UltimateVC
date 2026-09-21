@@ -19,7 +19,7 @@ import { AudioEffectsState, AudioSettingsState, EngineStats, RvcModel, VoiceTran
 export const App: React.FC = () => {
   // State
   const [models, setModels] = useState<RvcModel[]>(DEFAULT_RVC_MODELS);
-  const [selectedModel, setSelectedModel] = useState<RvcModel>(DEFAULT_RVC_MODELS[0]);
+  const [selectedModel, setSelectedModel] = useState<RvcModel | null>(DEFAULT_RVC_MODELS[0] || null);
   const [settings, setSettings] = useState<AudioSettingsState>(INITIAL_AUDIO_SETTINGS);
   const [transform, setTransform] = useState<VoiceTransformState>(INITIAL_VOICE_TRANSFORM);
   const [effects, setEffects] = useState<AudioEffectsState>(INITIAL_AUDIO_EFFECTS);
@@ -46,11 +46,15 @@ export const App: React.FC = () => {
   useEffect(() => {
     const blockMs = (settings.blockSize / settings.sampleRate) * 1000;
     const lookaheadMs = blockMs * (settings.lookaheadBuffer - 1.0);
-    const estimatedTotal = Math.max(8.0, blockMs + lookaheadMs + 6.0); // includes CUDA pipeline & DAC buffer
+    const estimatedTotal = Math.max(8.0, blockMs + lookaheadMs + 6.0); // includes DSP pipeline & DAC buffer
     setStats((prev) => ({ ...prev, calculatedLatencyMs: estimatedTotal }));
   }, [settings.blockSize, settings.sampleRate, settings.lookaheadBuffer]);
 
-  // Sync settings, transforms, and effects to audio engine whenever they change
+  // Sync model, settings, transforms, and effects to audio engine whenever they change
+  useEffect(() => {
+    audioEngine.setModel(selectedModel);
+  }, [selectedModel]);
+
   useEffect(() => {
     audioEngine.applyTransform(transform);
   }, [transform]);
@@ -88,6 +92,7 @@ export const App: React.FC = () => {
 
   const ensureEngineStarted = async () => {
     await audioEngine.initAudio(settings);
+    audioEngine.setModel(selectedModel);
     audioEngine.applyTransform(transform);
     audioEngine.applyEffects(effects);
     audioEngine.applySettings(settings);
@@ -126,6 +131,20 @@ export const App: React.FC = () => {
     }));
   };
 
+  const handleTestPreview = async () => {
+    await ensureEngineStarted();
+    const buffer = audioEngine.generateSampleVoiceBuffer();
+    if (buffer) {
+      audioEngine.setSoundFileBuffer(buffer);
+      audioEngine.playSoundFile(() => {
+        handleSoundPlayingStateChange(false);
+      });
+      handleSoundPlayingStateChange(true);
+      setIsEngineActive(true);
+      setStats((prev) => ({ ...prev, isActive: true }));
+    }
+  };
+
   const handleToggleRecording = () => {
     if (!stats.isRecording) {
       const started = audioEngine.startRecording();
@@ -145,7 +164,8 @@ export const App: React.FC = () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `UltimateVC_Converted_${selectedModel.name.replace(/\s+/g, '_')}_${Date.now()}.webm`;
+        const namePart = selectedModel?.name ? selectedModel.name.replace(/\s+/g, '_') : 'Converted_Voice';
+        a.download = `UltimateVC_${namePart}_${Date.now()}.webm`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -174,6 +194,10 @@ export const App: React.FC = () => {
       <Header
         stats={stats}
         isEngineActive={isEngineActive}
+        selfMonitoringEnabled={settings.selfMonitoringEnabled}
+        onToggleMonitoring={() =>
+          setSettings((prev) => ({ ...prev, selfMonitoringEnabled: !prev.selfMonitoringEnabled }))
+        }
         onToggleEngine={handleToggleEngine}
         onToggleRecording={handleToggleRecording}
         onResetDefaults={handleResetDefaults}
@@ -186,7 +210,11 @@ export const App: React.FC = () => {
 
         {/* Primary Controls Row: Pitch & Formant and Realtime Sound File Inferencing */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <PitchControl transform={transform} onChange={setTransform} />
+          <PitchControl
+            transform={transform}
+            onChange={setTransform}
+            onTestVoice={handleTestPreview}
+          />
           <SoundFilePlayer
             isEngineActive={isEngineActive}
             onEnsureEngineStarted={ensureEngineStarted}
@@ -225,7 +253,7 @@ export const App: React.FC = () => {
 
       {/* Footer */}
       <footer className="border-t border-zinc-900 bg-zinc-950 py-4 px-6 text-center text-xs text-zinc-500">
-        <p>UltimateVC / Vonovox • Realtime AI Voice Converter for RVC Models • Web Audio DSP & CUDA Accelerated Pipeline</p>
+        <p>UltimateVC • Realtime Voice Converter & 10-Band EQ • Zero Echo Monitoring</p>
       </footer>
     </div>
   );

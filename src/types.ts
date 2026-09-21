@@ -29,6 +29,7 @@ export interface AudioSettingsState {
   vadReleaseMs: number; // Default 400ms from README
   apBweUpscaling: boolean; // 48k bandwidth extension
   exclusiveMode: boolean;
+  selfMonitoringEnabled: boolean; // Controls whether user hears their own voice through headphones (Direct monitoring)
 }
 
 export interface VoiceTransformState {
@@ -80,6 +81,11 @@ export interface AudioEffectsState {
 
   lowQualityMicEnabled: boolean;
   lowQualityMicIntensity: number; // 0 to 1.0
+
+  // 10-Band Precision Mastering EQ & Female Voice Presets
+  eq10BandEnabled: boolean;
+  eq10Gains: number[]; // 10 bands: [31, 63, 125, 250, 500, 1000, 2000, 4000, 8000, 16000] Hz
+  femalePresetActive: string | null; // 'anime' | 'natural' | 'bright' | 'compensator' | null
 }
 
 export interface SoundFileState {

@@ -1,10 +1,12 @@
 import React from 'react';
-import { Activity, Disc3, Mic, MicOff, Power, RotateCcw } from 'lucide-react';
+import { Activity, Disc3, Mic, MicOff, Power, RotateCcw, Volume2, VolumeX } from 'lucide-react';
 import { EngineStats } from '../types';
 
 interface HeaderProps {
   stats: EngineStats;
   isEngineActive: boolean;
+  selfMonitoringEnabled: boolean;
+  onToggleMonitoring: () => void;
   onToggleEngine: () => void;
   onToggleRecording: () => void;
   onResetDefaults: () => void;
@@ -13,6 +15,8 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   stats,
   isEngineActive,
+  selfMonitoringEnabled,
+  onToggleMonitoring,
   onToggleEngine,
   onToggleRecording,
   onResetDefaults,
@@ -24,35 +28,34 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header id="ultimatevc-header" className="bg-zinc-900/90 border-b border-zinc-800 backdrop-blur-md sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-        {/* Brand & Status */}
-        <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-500/10 text-zinc-950 font-black text-xl">
-            V
+    <header className="border-b border-zinc-800 bg-zinc-900/90 backdrop-blur-md px-4 sm:px-6 py-3 sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+        {/* Logo & Branding */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 flex items-center justify-center shadow-lg shadow-amber-500/20 text-zinc-950 font-black text-xl tracking-tighter">
+            VC
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold text-white tracking-tight">UltimateVC</h1>
-              <span className="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-zinc-800 text-amber-400 border border-zinc-700">
-                Vonovox RVC v2
-              </span>
-              <span className="text-[11px] font-medium text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2 py-0.5 rounded-full flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                CUDA Accel
+              <h1 className="font-extrabold text-base tracking-tight text-zinc-100">
+                UltimateVC <span className="text-amber-400 font-light text-xs font-mono">v2.1 RVC</span>
+              </h1>
+              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700">
+                Live DSP
               </span>
             </div>
-            <p className="text-xs text-zinc-400">Realtime AI Voice Converter & Post-Processing Rack</p>
+            <p className="text-xs text-zinc-400">
+              Low-Latency Realtime AI Voice Converter & 10-Band Mastering EQ
+            </p>
           </div>
         </div>
 
-        {/* Live Audio Metrics */}
-        <div className="flex items-center gap-2 sm:gap-4 bg-zinc-950/70 border border-zinc-800/80 rounded-xl px-3.5 py-1.5 text-xs">
+        {/* Realtime Engine Status Indicators */}
+        <div className="hidden md:flex items-center gap-4 px-4 py-1.5 rounded-xl bg-zinc-950/80 border border-zinc-800/80 text-xs">
           <div className="flex flex-col">
-            <span className="text-[10px] uppercase font-semibold text-zinc-500">Pipeline Latency</span>
-            <span className="font-mono font-bold text-amber-400 flex items-center gap-1">
-              <Activity className="w-3.5 h-3.5 text-amber-500" />
-              {isEngineActive ? `${stats.calculatedLatencyMs.toFixed(1)} ms` : '-- ms'}
+            <span className="text-[10px] uppercase font-semibold text-zinc-500">Latency (Total)</span>
+            <span className="font-mono font-semibold text-amber-400">
+              {stats.calculatedLatencyMs.toFixed(1)} ms
             </span>
           </div>
           <div className="w-px h-6 bg-zinc-800" />
@@ -74,6 +77,25 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Controls */}
         <div className="flex items-center gap-2">
+          {/* Headphone Self-Monitoring Toggle Button */}
+          <button
+            id="btn-toggle-monitoring"
+            onClick={onToggleMonitoring}
+            title={
+              selfMonitoringEnabled
+                ? 'Headphones Monitoring is ON (You hear yourself). Click to MUTE.'
+                : 'Headphones Monitoring is MUTED (No echo). Click to hear converted voice.'
+            }
+            className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all border ${
+              selfMonitoringEnabled
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm'
+                : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 border-zinc-700'
+            }`}
+          >
+            {selfMonitoringEnabled ? <Volume2 className="w-4 h-4 text-amber-400" /> : <VolumeX className="w-4 h-4 text-zinc-500" />}
+            <span className="hidden sm:inline">{selfMonitoringEnabled ? 'Monitor: ON' : 'Monitor: Muted'}</span>
+          </button>
+
           {/* Record Button */}
           <button
             id="btn-record-audio"

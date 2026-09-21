@@ -1,47 +1,7 @@
 import { AudioEffectsState, AudioSettingsState, RvcModel, VoiceTransformState } from '../types';
 
-export const DEFAULT_RVC_MODELS: RvcModel[] = [
-  {
-    id: 'rvc-anime-f',
-    name: 'Yuki - Anime Protagonist (48k)',
-    author: 'dr87 / Vonovox',
-    embedder: 'contentvec',
-    pitchExtractor: 'rmvpe',
-    sampleRate: 48000,
-    description: 'Crisp female vocal model trained on 15 hours of high-fidelity studio voice acting.',
-    indexRate: 0.75,
-  },
-  {
-    id: 'rvc-radio-m',
-    name: 'Marcus - Deep Radio Host (48k)',
-    author: 'dr87 / Vonovox',
-    embedder: 'contentvec',
-    pitchExtractor: 'rmvpe',
-    sampleRate: 48000,
-    description: 'Warm broadcast baritone voice with rich lower resonances, ideal for podcasts.',
-    indexRate: 0.85,
-  },
-  {
-    id: 'rvc-vocal-pop',
-    name: 'Serena - Pop Vocalist (40k)',
-    author: 'dr87 / Vonovox',
-    embedder: 'spin',
-    pitchExtractor: 'fcpe',
-    sampleRate: 40000,
-    description: 'Dynamic pop singing model with wide pitch agility, trained with SPIN & FCPE.',
-    indexRate: 0.65,
-  },
-  {
-    id: 'rvc-cyber-synth',
-    name: 'Nexus - Cyberpunk Synth (48k)',
-    author: 'dr87 / Vonovox',
-    embedder: 'contentvec',
-    pitchExtractor: 'swiftf0',
-    sampleRate: 48000,
-    description: 'Electronic modulated voice tone with robotic texture and low latency tracking.',
-    indexRate: 0.70,
-  },
-];
+// User requested removal of pre-defined models so only custom .pth models are used
+export const DEFAULT_RVC_MODELS: RvcModel[] = [];
 
 export const INITIAL_AUDIO_SETTINGS: AudioSettingsState = {
   inputDeviceId: 'default',
@@ -56,6 +16,7 @@ export const INITIAL_AUDIO_SETTINGS: AudioSettingsState = {
   vadReleaseMs: 400, // Explicitly documented in README: 400ms release window
   apBweUpscaling: true, // AP-BWE 48k optional upscaling
   exclusiveMode: false,
+  selfMonitoringEnabled: true, // Default ON: allows user to hear their transformed voice live in headphones. Can be muted with 1-click for Discord/VAC.
 };
 
 export const INITIAL_VOICE_TRANSFORM: VoiceTransformState = {
@@ -107,4 +68,9 @@ export const INITIAL_AUDIO_EFFECTS: AudioEffectsState = {
 
   lowQualityMicEnabled: false,
   lowQualityMicIntensity: 0.6,
+
+  // 10-Band EQ & Female Voice Defaults
+  eq10BandEnabled: true,
+  eq10Gains: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  femalePresetActive: null,
 };

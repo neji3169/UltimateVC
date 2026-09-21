@@ -1,0 +1,11 @@
+{
+  "name": "Radyo & Telsiz",
+  "description": "350Hz altını ve 4kHz üstünü sert şekilde filtreleyerek nostaljik telsiz/radyo efekti verir.",
+  "gains": [-15.0, -15.0, -15.0, -8.0, 3.0, 6.0, 5.0, 1.0, -12.0, -15.0],
+  "desktop_filters": {
+    "peak_filter_1": { "enabled": true, "cutoff_frequency_hz": 350.0, "gain_db": -12.0, "q": 1.5 },
+    "peak_filter_2": { "enabled": true, "cutoff_frequency_hz": 1200.0, "gain_db": 6.0, "q": 1.0 },
+    "peak_filter_3": { "enabled": true, "cutoff_frequency_hz": 2800.0, "gain_db": 4.5, "q": 1.0 },
+    "peak_filter_4": { "enabled": true, "cutoff_frequency_hz": 5000.0, "gain_db": -12.0, "q": 2.0 }
+  }
+}

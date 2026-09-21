@@ -1,4 +1,4 @@
-# Vonovox
+# UltimateVC
 ## Realtime AI Voice Converter for RVC Models
 
 ![UI](docs/images/ui1.png)

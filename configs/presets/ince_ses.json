@@ -1,0 +1,11 @@
+{
+  "name": "İnce Ses",
+  "description": "Alt frekansları tamamen keserek sesi inceltir, tiz ve hava bandını parlatarak ultra ince/tiz vokal oluşturur.",
+  "gains": [-12.0, -11.0, -10.0, -7.0, -1.0, 2.0, 4.5, 6.5, 6.0, 5.0],
+  "desktop_filters": {
+    "peak_filter_1": { "enabled": true, "cutoff_frequency_hz": 220.0, "gain_db": -9.5, "q": 1.0 },
+    "peak_filter_2": { "enabled": true, "cutoff_frequency_hz": 900.0, "gain_db": 1.5, "q": 1.0 },
+    "peak_filter_3": { "enabled": true, "cutoff_frequency_hz": 4000.0, "gain_db": 6.0, "q": 1.0 },
+    "peak_filter_4": { "enabled": true, "cutoff_frequency_hz": 9500.0, "gain_db": 5.0, "q": 1.0 }
+  }
+}

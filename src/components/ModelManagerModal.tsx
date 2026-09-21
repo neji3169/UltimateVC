@@ -6,7 +6,7 @@ interface ModelManagerModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddCustomModel: (model: RvcModel) => void;
-  currentModel: RvcModel;
+  currentModel?: RvcModel | null;
 }
 
 export const ModelManagerModal: React.FC<ModelManagerModalProps> = ({

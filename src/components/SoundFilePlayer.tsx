@@ -199,7 +199,8 @@ export const SoundFilePlayer: React.FC<SoundFilePlayerProps> = ({
 
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 border border-zinc-700 transition"
+          title="Browse and load local audio files (.wav, .mp3, .flac) to process through the voice model"
+          className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold flex items-center gap-1.5 border border-zinc-700 transition cursor-pointer"
         >
           <Upload className="w-3.5 h-3.5 text-amber-400" />
           <span>Upload Audio File</span>
@@ -207,14 +208,15 @@ export const SoundFilePlayer: React.FC<SoundFilePlayerProps> = ({
 
         <button
           onClick={handleLoadSamplePhrase}
-          className="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-semibold flex items-center gap-1.5 border border-amber-500/30 transition"
+          title="Load high-fidelity synthesized studio voice test phrase for instant preview"
+          className="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-semibold flex items-center gap-1.5 border border-amber-500/30 transition cursor-pointer"
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
           <span>Load Sample Phrase</span>
         </button>
 
         <div className="flex-1 min-w-36 text-right">
-          <span className="text-xs font-mono text-zinc-300 truncate max-w-xs block">
+          <span className="text-xs font-mono text-zinc-300 truncate max-w-xs block" title={soundState.loadedFileName || 'No audio file loaded'}>
             {soundState.loadedFileName || 'No audio file loaded'}
           </span>
         </div>

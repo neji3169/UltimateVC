@@ -1,0 +1,11 @@
+{
+  "name": "Natural Kadın Sesi",
+  "description": "Organik kadın konuşma rezonansı: Bas patlamalarını yumuşatır, anlaşılırlık ve doğallık katar.",
+  "gains": [-5.0, -4.5, -4.0, -2.0, 1.0, 2.5, 3.5, 3.0, 2.5, 1.5],
+  "desktop_filters": {
+    "peak_filter_1": { "enabled": true, "cutoff_frequency_hz": 150.0, "gain_db": -4.5, "q": 1.0 },
+    "peak_filter_2": { "enabled": true, "cutoff_frequency_hz": 800.0, "gain_db": 1.0, "q": 1.0 },
+    "peak_filter_3": { "enabled": true, "cutoff_frequency_hz": 2800.0, "gain_db": 3.5, "q": 1.0 },
+    "peak_filter_4": { "enabled": true, "cutoff_frequency_hz": 7000.0, "gain_db": 2.5, "q": 1.0 }
+  }
+}

@@ -1,13 +1,14 @@
 import React from 'react';
-import { Volume2, Sliders, Sparkles, RefreshCw } from 'lucide-react';
+import { Volume2, Sliders, Sparkles, RefreshCw, Play } from 'lucide-react';
 import { VoiceTransformState } from '../types';
 
 interface PitchControlProps {
   transform: VoiceTransformState;
   onChange: (newTransform: VoiceTransformState) => void;
+  onTestVoice?: () => void;
 }
 
-export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange }) => {
+export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange, onTestVoice }) => {
   const getIntervalLabel = (semitones: number) => {
     if (semitones === 0) return 'Original Key (0 st)';
     if (semitones === 12) return '+1 Octave (Female shift)';
@@ -37,14 +38,26 @@ export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange 
           <Sparkles className="w-4 h-4 text-amber-500" />
           <h2 className="text-xs font-bold text-zinc-200 uppercase tracking-wider">Pitch & Formant Voice Modulation</h2>
         </div>
-        <button
-          onClick={() => onChange({ pitchSemitones: 0, formantShift: 0, indexRate: 0.75 })}
-          className="text-xs text-zinc-400 hover:text-amber-400 flex items-center gap-1 transition"
-          title="Reset to normal voice"
-        >
-          <RefreshCw className="w-3 h-3" />
-          <span>Reset</span>
-        </button>
+        <div className="flex items-center gap-2">
+          {onTestVoice && (
+            <button
+              onClick={onTestVoice}
+              title="Play test speech sample through the current pitch shifter and 10-band EQ"
+              className="text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition font-medium"
+            >
+              <Play className="w-3 h-3 fill-amber-400 text-amber-400" />
+              <span>Preview Voice</span>
+            </button>
+          )}
+          <button
+            onClick={() => onChange({ pitchSemitones: 0, formantShift: 0, indexRate: 0.75 })}
+            className="text-xs text-zinc-400 hover:text-amber-400 flex items-center gap-1 transition"
+            title="Reset to normal voice"
+          >
+            <RefreshCw className="w-3 h-3" />
+            <span>Reset</span>
+          </button>
+        </div>
       </div>
 
       {/* Pitch Shift Slider */}
@@ -69,14 +82,16 @@ export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange 
           max={24}
           step={1}
           value={transform.pitchSemitones}
+          title={`Pitch shift: ${transform.pitchSemitones > 0 ? '+' : ''}${transform.pitchSemitones} semitones`}
           onChange={(e) => setPitch(parseInt(e.target.value, 10))}
-          className="w-full h-2 bg-zinc-950 rounded-lg cursor-pointer"
+          className="w-full h-2 bg-zinc-950 rounded-lg cursor-pointer accent-amber-500"
         />
 
         {/* Quick Pitch Presets */}
         <div className="flex flex-wrap gap-1.5 pt-1">
           <button
             onClick={() => setPitch(-12)}
+            title="Male conversion preset (-12 semitones / 1 octave down)"
             className={`px-2.5 py-1 text-xs rounded-lg border font-medium transition ${
               transform.pitchSemitones === -12
                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
@@ -87,6 +102,7 @@ export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange 
           </button>
           <button
             onClick={() => setPitch(-7)}
+            title="Deep masculine voice preset (-7 semitones)"
             className={`px-2.5 py-1 text-xs rounded-lg border font-medium transition ${
               transform.pitchSemitones === -7
                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
@@ -97,6 +113,7 @@ export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange 
           </button>
           <button
             onClick={() => setPitch(0)}
+            title="Original natural pitch (0 semitones)"
             className={`px-2.5 py-1 text-xs rounded-lg border font-medium transition ${
               transform.pitchSemitones === 0
                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
@@ -107,6 +124,7 @@ export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange 
           </button>
           <button
             onClick={() => setPitch(8)}
+            title="Slight high pitch (+8 semitones)"
             className={`px-2.5 py-1 text-xs rounded-lg border font-medium transition ${
               transform.pitchSemitones === 8
                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
@@ -117,6 +135,7 @@ export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange 
           </button>
           <button
             onClick={() => setPitch(12)}
+            title="Female conversion preset (+12 semitones / 1 octave up)"
             className={`px-2.5 py-1 text-xs rounded-lg border font-medium transition ${
               transform.pitchSemitones === 12
                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
@@ -130,7 +149,7 @@ export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange 
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-zinc-800">
         {/* Formant Shift Slider */}
-        <div className="space-y-1.5">
+        <div className="space-y-1.5" title="Alters vocal tract length and resonance characteristics without modifying pitch key">
           <div className="flex justify-between items-baseline">
             <span className="text-xs font-semibold text-zinc-300">Formant Shift</span>
             <span className="text-xs font-mono font-bold text-amber-400">
@@ -144,14 +163,15 @@ export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange 
             max={12}
             step={0.5}
             value={transform.formantShift}
+            title={`Formant shift: ${transform.formantShift > 0 ? '+' : ''}${transform.formantShift}`}
             onChange={(e) => setFormant(parseFloat(e.target.value))}
-            className="w-full h-1.5 bg-zinc-950 rounded-lg cursor-pointer"
+            className="w-full h-1.5 bg-zinc-950 rounded-lg cursor-pointer accent-amber-500"
           />
           <p className="text-[10px] text-zinc-500">Alters vocal tract resonance without affecting pitch</p>
         </div>
 
         {/* Index Feature Rate */}
-        <div className="space-y-1.5">
+        <div className="space-y-1.5" title="Feature Retrieval Index ratio: controls target voice similarity and accent match">
           <div className="flex justify-between items-baseline">
             <span className="text-xs font-semibold text-zinc-300">Feature Index Rate</span>
             <span className="text-xs font-mono font-bold text-amber-400">
@@ -165,8 +185,9 @@ export const PitchControl: React.FC<PitchControlProps> = ({ transform, onChange 
             max={1}
             step={0.05}
             value={transform.indexRate}
+            title={`Index retrieval weight: ${(transform.indexRate * 100).toFixed(0)}%`}
             onChange={(e) => setIndexRate(parseFloat(e.target.value))}
-            className="w-full h-1.5 bg-zinc-950 rounded-lg cursor-pointer"
+            className="w-full h-1.5 bg-zinc-950 rounded-lg cursor-pointer accent-amber-500"
           />
           <p className="text-[10px] text-zinc-500">Balance between voice timbre accuracy and source accent</p>
         </div>

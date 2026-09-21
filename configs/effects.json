@@ -1,0 +1,57 @@
+{
+  "active_preset": "anime_kadin",
+  "gain": {
+    "enabled": true,
+    "gain_db": 0.0
+  },
+  "noise_gate": {
+    "enabled": false,
+    "threshold_db": -50.0
+  },
+  "peak_filter_1": {
+    "enabled": true,
+    "cutoff_frequency_hz": 180.0,
+    "gain_db": -8.0,
+    "q": 1.0
+  },
+  "peak_filter_2": {
+    "enabled": true,
+    "cutoff_frequency_hz": 650.0,
+    "gain_db": -2.5,
+    "q": 1.0
+  },
+  "peak_filter_3": {
+    "enabled": true,
+    "cutoff_frequency_hz": 3200.0,
+    "gain_db": 5.5,
+    "q": 1.0
+  },
+  "peak_filter_4": {
+    "enabled": true,
+    "cutoff_frequency_hz": 8500.0,
+    "gain_db": 4.0,
+    "q": 1.0
+  },
+  "chorus": {
+    "enabled": false,
+    "rate_hz": 1.0,
+    "depth": 0.25,
+    "centre_delay_ms": 7.0,
+    "feedback": 0.0,
+    "mix": 0.5
+  },
+  "reverb": {
+    "enabled": false,
+    "room_size": 0.5,
+    "damping": 0.5,
+    "wet_level": 0.33,
+    "dry_level": 0.4
+  },
+  "compressor": {
+    "enabled": false,
+    "threshold_db": -16.0,
+    "ratio": 2.0,
+    "attack_ms": 1.0,
+    "release_ms": 100.0
+  }
+}
