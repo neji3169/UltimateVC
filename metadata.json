@@ -1,0 +1,10 @@
+{
+  "name": "UltimateVC Voice Converter",
+  "description": "Realtime AI voice converter and audio processor for RVC models with pitch shifting, VAD noise suppression, formant control, sound file inferencing, and studio post-processing effects.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
